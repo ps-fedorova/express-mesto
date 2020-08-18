@@ -23,7 +23,7 @@ module.exports = {
   getCards,
 };
 
-// // Блок управления (аналог без helpers.js, который нельзя почему-то...)
+// // Блок управления (аналог без helpers.js)
 
 // const cards = require('../data/cards.json');
 

@@ -38,7 +38,7 @@ module.exports = {
   getUser,
 };
 
-// // Блок управления (аналог без helpers.js, который нельзя почему-то...)
+// // Блок управления (аналог без helpers.js)
 
 // const users = require('../data/users.json');
 
