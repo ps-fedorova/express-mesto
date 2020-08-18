@@ -4,9 +4,13 @@ const express = require('express');
 
 const app = express();
 const path = require('path');
+const helmet = require('helmet');
+
 const { userRouter, cardsRouter } = require('./routes/exports');
 
 const { PORT = 3000 } = process.env; // const PORT = process.env.PORT || 3000;
+
+app.use(helmet());
 
 app.use(express.static(path.join(__dirname, 'public'))); // отдать статичные данные из папки "public"
 
