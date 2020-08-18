@@ -7,10 +7,12 @@ const path = require('path');
 const helmet = require('helmet');
 
 const { userRouter, cardsRouter } = require('./routes/exports');
+const limiter = require('./middleware/express-rate-limit');
 
 const { PORT = 3000 } = process.env; // const PORT = process.env.PORT || 3000;
 
-app.use(helmet());
+app.use(helmet()); // для простановки security-заголовков для API
+app.use(limiter); // для ограничения кол-во запросов
 
 app.use(express.static(path.join(__dirname, 'public'))); // отдать статичные данные из папки "public"
 
