@@ -1,66 +1,89 @@
-// Блок управления
+const User = require('../models/modelUser');
+const BadRequestError = require('../errors/BadRequestError');
+const NotFoundError = require('../errors/NotFoundError');
+const {
+  CLIENT_ERROR,
+} = require('../libs/statusMessages');
 
-const path = require('path');
-const { readFile } = require('../helpers/helpers');
-
-const users = path.join(__dirname, '..', 'data', 'users.json');
-
-const getAllUsers = (req, res) => {
-  readFile(users)
-    .then((data) => res
-      .status(200)
-      .send(JSON.parse(data)))
-    .catch((error) => res
-      .status(500)
-      .send({ message: `${error}` }));
+const getAllUsers = (req, res, next) => {
+  User.find({})
+    .then((users) => res.send({ data: users }))
+    .catch(next);
 };
 
-const getUser = (req, res) => {
-  readFile(users)
-    .then((data) => {
-      const currentUser = JSON.parse((data)).find((user) => user._id === req.params.id);
-      if (!currentUser) { // найти текущего пользователя
-        res
-          .status(404)
-          .send({ message: 'Нет пользователя с таким id' });
-      }
-      res
-        .status(200)
-        .send(currentUser);
+const getCurrentUser = (req, res, next) => {
+  User.findById(req.params._id)
+    .orFail()
+    .catch(() => {
+      throw new NotFoundError({ message: CLIENT_ERROR.USER_NOT_FOUND });
     })
-    .catch((error) => res
-      .status(500)
-      .send({ message: `${error}` }));
+    .then((user) => res.send({ data: user }))
+    .catch(next);
+};
+
+const createUser = (req, res, next) => {
+  const { name, about, avatar } = req.body;
+
+  User.create({
+    name,
+    about,
+    avatar
+  })
+    .catch((err) => {
+      throw new BadRequestError({ message: `${err.message}` });
+    })
+    .then((user) => res.send({ data: user }))
+    .catch(next);
+};
+
+const updateUser = (req, res, next) => {
+  const { name, about, avatar } = req.body;
+
+  User.findByIdAndUpdate(req.user._id,
+    {
+      name,
+      about,
+      avatar
+    },
+    {
+      new: true,
+      runValidators: true,
+    })
+    .orFail(() => new NotFoundError({ message: CLIENT_ERROR.USER_NOT_FOUND }))
+    .catch((err) => {
+      if (err instanceof NotFoundError) {
+        throw err;
+      }
+      throw new BadRequestError({ message: `${err.message}` });
+    })
+    .then((user) => res.send({ data: user }))
+    .catch(next);
+};
+
+const updateAvatar = (req, res, next) => {
+  const { avatar } = req.body;
+
+  User.findByIdAndUpdate(req.user._id,
+    { avatar },
+    {
+      new: true,
+      runValidators: true,
+    })
+    .orFail(() => new NotFoundError({ message: CLIENT_ERROR.USER_NOT_FOUND }))
+    .catch((err) => {
+      if (err instanceof NotFoundError) {
+        throw err;
+      }
+      throw new BadRequestError({ message: `${err.message}` });
+    })
+    .then((newAvatar) => res.send({ data: newAvatar }))
+    .catch(next);
 };
 
 module.exports = {
   getAllUsers,
-  getUser,
+  getCurrentUser,
+  createUser,
+  updateUser,
+  updateAvatar,
 };
-
-// // Блок управления (аналог без helpers.js)
-
-// const users = require('../data/users.json');
-
-// const getAllUsers = (req, res) => {
-//   res
-//     .status(200)
-//     .send(users);
-// };
-
-// const getUser = (req, res) => {
-//   const currentUser = users.find((user) => user._id === req.params.id);
-//   if (!currentUser) { // найти текущего пользователя
-//     res
-//       .status(404)
-//       .send({ message: 'Нет пользователя с таким id' });
-//   }
-//   res
-//     .status(200)
-//     .send(currentUser);
-// };
-
-// module.exports = {
-//   getAllUsers,
-//   getUser,
-// };

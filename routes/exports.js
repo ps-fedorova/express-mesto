@@ -1,7 +1,7 @@
-const userRouter = require('./users');
-const cardsRouter = require('./cards');
+const usersRouter = require('./routerUsers');
+const cardsRouter = require('./routerCards');
 
 module.exports = {
-  userRouter,
+  usersRouter,
   cardsRouter,
 };
