@@ -1,7 +1,7 @@
 module.exports = {
 
   SUCCESS: {
-    REMOVE_CARD: 'Пост успешно удален', // 200 OK («хорошо»)[
+    REMOVE_CARD: 'Пост успешно удален', // 200 OK («хорошо»)
   },
 
   CLIENT_ERROR: {

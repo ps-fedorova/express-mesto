@@ -34,7 +34,7 @@ const deleteCard = (req, res, next) => {
     .catch(() => {
       throw new NotFoundError({ message: CLIENT_ERROR.CARD_NOT_FOUND });
     })
-    .then(res.send({ message: SUCCESS.REMOVE_CARD }))
+    .then(() => res.send({ message: SUCCESS.REMOVE_CARD }))
     .catch(next);
 };
 
