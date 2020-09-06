@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
+
 const {
   requiredTrue,
   min,
   max,
-  messageInvalidURL,
+  validURL,
 } = require('../libs/validationParameters');
 
 const userSchema = new mongoose.Schema({
@@ -23,12 +23,7 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     required: requiredTrue,
-    validate: {
-      validator(link) {
-        return validator.isURL(link);
-      },
-      message: messageInvalidURL,
-    },
+    match: validURL,
   },
 });
 

@@ -27,7 +27,7 @@ const createUser = (req, res, next) => {
   User.create({
     name,
     about,
-    avatar
+    avatar,
   })
     .catch((err) => {
       throw new BadRequestError({ message: `${err.message}` });
@@ -43,7 +43,7 @@ const updateUser = (req, res, next) => {
     {
       name,
       about,
-      avatar
+      avatar,
     },
     {
       new: true,

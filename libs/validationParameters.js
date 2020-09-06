@@ -11,9 +11,11 @@ function max(y) {
   return [`${y}`, `здесь должно быть не более ${y} ${declOfNum(y)}`];
 }
 
+const regEx = /(https?|ftp|file):\/\/(www\.)?([-a-z0-9]+\.)([0-9a-z].*)/;
+
 module.exports = {
   requiredTrue: [true, 'обязательное поле для заполнения'],
   min,
   max,
-  messageInvalidURL: 'введён некорректный URL',
+  validURL: [regEx, 'введён некорректный URL'],
 };
